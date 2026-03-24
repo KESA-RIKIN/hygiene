@@ -1,0 +1,13 @@
+# Core ML / CV
+# NOTE: torch is intentionally NOT listed here.
+# Install PyTorch with CUDA 12.x support manually (RTX 4050 needs this):
+#   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+# Then install the rest:
+#   pip install -r requirements.txt
+ultralytics>=8.0.0
+opencv-python>=4.8.0
+
+# Web framework
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.0
+python-multipart
