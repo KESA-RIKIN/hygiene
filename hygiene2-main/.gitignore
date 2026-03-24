@@ -1,0 +1,52 @@
+# === Backend (Python/FastAPI) ===
+backend/venv/
+backend/__pycache__/
+backend/*.py[cod]
+backend/*$py.class
+backend/.pytest_cache/
+backend/.coverage
+backend/htmlcov/
+backend/.env
+backend/data/
+backend/runs/
+backend/temp_uploads/
+backend/*.log
+backend/*.pt
+
+# YOLO/Models
+*.pt
+*.onnx
+
+# === Frontend (React/Vite) ===
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/build/
+frontend/.env
+frontend/.env.*.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+frontend/lerna-debug.log*
+
+# === IDE & OS ===
+.vscode/
+!.vscode/extensions.json
+.idea/
+.cursor/
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# === Root Level Trash ===
+*.log
+*.zip
+*.mp4
+node_modules/
+dist/
+venv/

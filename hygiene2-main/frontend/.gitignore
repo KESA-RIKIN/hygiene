@@ -1,0 +1,42 @@
+# ================= BACKEND =================
+backend/data/
+backend/runs/
+backend/venv/
+backend/temp_uploads/
+backend/hygiene_engine/dataset/
+backend/*.log
+
+# ================= FRONTEND =================
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+
+# ================= MODELS =================
+*.pt
+*.onnx
+
+# ================= PYTHON =================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ================= ENV =================
+.env
+.env.*
+
+# ================= LOGS =================
+*.log
+
+# ================= SYSTEM =================
+.DS_Store
+Thumbs.db
+
+# ================= IDE =================
+.vscode/
+.idea/
+.cursor/
+
+# ================= MISC =================
+*.zip
+*.mp4
