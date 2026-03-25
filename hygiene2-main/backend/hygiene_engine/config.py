@@ -12,33 +12,21 @@ DB_PATH = DATA_DIR / "violations.db"
 @dataclass
 class ModelConfig:
     """
-    Configuration for YOLOv8 models and PPE labels.
+    Configuration for YOLOv8 models.
 
-    Dual-model setup:
-    - Person detector (yolov8n.pt)
-    - PPE detector (custom trained best.pt)
+    ⚡ Using lightweight default YOLOv8n model for deployment
+    (No custom best.pt required)
     """
 
-    # Pretrained COCO person detector
+    # Use same lightweight model for both
     person_weights_path: str = "yolov8n.pt"
+    ppe_weights_path: str = "yolov8n.pt"
 
-    # Custom PPE model
-    ppe_weights_path: str = str(
-        PROJECT_ROOT
-        / "runs"
-        / "detect"
-        / "runs"
-        / "detect"
-        / "ppe_yolov82"
-        / "weights"
-        / "best.pt"
-    )
-
-    # Only these classes are used from PPE model
+    # Labels kept for compatibility (not actively used now)
     glove_labels: List[str] = field(default_factory=lambda: [
-    "gloves",
-    "Glove Hand and Bare Hand - v3 V2"
-                                  ])
+        "gloves",
+        "Glove Hand and Bare Hand - v3 V2"
+    ])
     hairnet_labels: List[str] = field(default_factory=lambda: ["hairnet"])
 
 
@@ -67,8 +55,7 @@ class EngineConfig:
     draw_annotations: bool = True
 
     # Optional checks
-    # Disabled by default for stable demo runs; toggle to True for full system.
-    enable_hairnet_check: bool = True
+    enable_hairnet_check: bool = False  # Disabled (no custom model)
 
 
 def ensure_directories() -> None:
