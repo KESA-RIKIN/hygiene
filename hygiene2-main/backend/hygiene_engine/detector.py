@@ -84,12 +84,16 @@ class YoloPPEDetector:
         )
 
         # PPE detector
-        self.ppe_model = YOLO(self.config.model.ppe_weights_path)
-        self.ppe_model.to(self.device)
-        
-        self._ppe_label_map: Dict[int, str] = (
-            self.ppe_model.model.names  # type: ignore[attr-defined]
-        )
+    # Use lightweight default YOLO model for BOTH person + PPE
+self.person_model = YOLO("yolov8n.pt")
+self.ppe_model = YOLO("yolov8n.pt")
+
+# Force CPU (Render free tier safe)
+self.device = "cpu"
+self.use_half = False
+
+self._person_label_map = self.person_model.model.names
+self._ppe_label_map = self.ppe_model.model.names
 
         _dbg_log(
             "H1",
