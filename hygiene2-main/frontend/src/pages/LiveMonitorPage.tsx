@@ -1,4 +1,4 @@
-import { Camera as CameraIcon, VideoOff, Video } from 'lucide-react'
+import { VideoOff, Video } from 'lucide-react'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { GlassCard } from '../components/GlassCard'
