@@ -3,7 +3,6 @@ from typing import List, Tuple, Dict, Any
 
 import cv2
 import numpy as np
-from ultralytics import YOLO
 
 from .config import EngineConfig
 
@@ -46,101 +45,42 @@ class YoloPPEDetector:
     def __init__(self, config: EngineConfig) -> None:
         self.config = config
 
-        # Always use CPU on Render
-        self.device = "cpu"
-        self.use_half = False
-
-        # Use lightweight default model
-        self.person_model = YOLO("yolov8n.pt")
-        self.ppe_model = YOLO("yolov8n.pt")
-
-        self._person_label_map = self.person_model.model.names
-        self._ppe_label_map = self.ppe_model.model.names
+        # ❌ NO YOLO — lightweight mode
+        self.person_model = None
+        self.ppe_model = None
 
         self._glove_last_seen_ts = None
         self._hairnet_last_seen_ts = None
         self._smoothing_window_sec = 3.0
 
-        # Warmup
-        try:
-            dummy = np.zeros((480, 640, 3), dtype=np.uint8)
-            self.person_model.predict(dummy, device=self.device, verbose=False)
-        except:
-            pass
-
-    def _parse_yolo_detections(self, results, label_map):
-        detections = []
-        r0 = results[0]
-
-        for box in r0.boxes:
-            score = float(box.conf.item())
-            if score < self.config.min_confidence:
-                continue
-
-            cls_id = int(box.cls.item())
-            name = label_map.get(cls_id, str(cls_id))
-
-            x1, y1, x2, y2 = box.xyxy[0].tolist()
-
-            detections.append(
-                Detection(name, score, (int(x1), int(y1), int(x2), int(y2)))
-            )
-
-        return detections
-
+    # ✅ NO DETECTION (SAFE FOR RENDER)
     def _detect_persons(self, frame):
-        results = self.person_model.predict(frame, device=self.device, verbose=False)
-        all_dets = self._parse_yolo_detections(results, self._person_label_map)
-        return [d for d in all_dets if d.cls_name == "person"]
+        return []
 
-    # 🔥 SIMPLIFIED PPE (NO CUSTOM MODEL)
     def _detect_ppe(self, frame):
         return [], []
 
     def _hands_show_skin(self, frame, persons):
-        for p in persons:
-            x1, y1, x2, y2 = p.bbox
-            roi = frame[y1:y2, x1:x2]
-
-            if roi.size == 0:
-                continue
-
-            hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
-
-            lower = np.array([0, 30, 60])
-            upper = np.array([25, 200, 255])
-
-            mask = cv2.inRange(hsv, lower, upper)
-            ratio = cv2.countNonZero(mask) / (roi.shape[0] * roi.shape[1])
-
-            if ratio > 0.15:
-                return True
-
         return False
 
     def analyze_frame(self, frame):
-        persons = self._detect_persons(frame)
+        # Dummy response (no AI)
+        persons = []
 
-        has_person = len(persons) > 0
-        hands_show_skin = self._hands_show_skin(frame, persons) if has_person else False
-
-        has_glove = has_person and not hands_show_skin
-        has_hairnet = False  # disabled
+        has_person = False
+        has_glove = True
+        has_hairnet = True
 
         violations = []
 
-        if has_person:
-            if not has_glove:
-                violations.append(PPEViolationType.MISSING_GLOVES)
-
-        is_compliant = has_person and not violations
+        is_compliant = True
 
         _dbg_log(
             "H2",
             "detector",
-            "frame analysis",
+            "frame analysis (dummy mode)",
             {
-                "persons": len(persons),
+                "persons": 0,
                 "glove": has_glove,
                 "violations": violations,
             },
